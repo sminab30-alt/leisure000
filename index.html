@@ -436,27 +436,32 @@ const NODE_COLORS=[
 ];
 
 // Layout presets (desktop vs mobile)
-function getMindMapLayout(){
+function getMindMapLayout() {
   const isMobile = window.matchMedia("(max-width: 600px)").matches;
 
-  // SVG base center
-  const cx = 400, cy = 240;
+  const cx = 400;
+  const cy = 240;
 
-  if(!isMobile){
-    // Clean circle around center (no overlapping “fan”)
+  if (!isMobile) {
+    // Desktop: clean circle
     return {
       cx, cy,
-      angles: [-140,-95,-45,0,45,95,140,180],   // nicely spaced
-      dist:   [220,220,220,210,220,220,220,210] // consistent radius
+      angles: [-135, -90, -45, 0, 45, 90, 135, 180],
+      dist:   [220, 220, 220, 210, 220, 220, 220, 210]
     };
   }
 
-  // Mobile: 4 left + 4 right, tighter and readable
-  // (prevents nodes stacking on top of each other)
+  // 📱 MOBILE CLEAN LAYOUT (vertical sides)
   return {
     cx, cy,
-    angles: [210,235,260,285, -30,-55,-80,-105],
-    dist:   [210,195,185,200, 210,195,185,200]
+    angles: [
+      200, 220, 240, 260,   // left side
+      -20, -40, -60, -80    // right side
+    ],
+    dist: [
+      190, 180, 170, 180,
+      190, 180, 170, 180
+    ]
   };
 }
 
@@ -712,4 +717,5 @@ window.addEventListener('load',()=>{
 </body>
 
 </html>
+
 
