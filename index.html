@@ -105,68 +105,112 @@
   @media(max-width:600px){ .activity-title{font-size:1.15rem} }
 
   /* MIND MAP (clean + responsive) */
-  .mindmap-container{background:linear-gradient(135deg,#f0fdf4,#f0f9ff);border-radius:22px;padding:10px;position:relative}
-  .mindmap-svg-wrap{
-    position:relative;width:100%;
-    padding-bottom:60%;
-    min-height:320px;
-  }
- @media(max-width:600px){
-  .mindmap-svg-wrap{
-    padding-bottom: 0;
-    min-height: 520px;   /* more vertical space */
-  }
+ 
+/* =========================
+   MIND MAP (rewritten)
+   ========================= */
+.mindmap-container{
+  background: linear-gradient(135deg,#f0fdf4,#f0f9ff);
+  border-radius:22px;
+  padding:10px;
 }
-  #mmCanvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+
+.mindmap-wrap{
+  position:relative;
+  width:100%;
+  min-height:520px;
+}
+
+#mmCanvas{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  display:block;
+}
+
+.mm-center{
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  background:linear-gradient(135deg,#34D399,#059669);
+  border-radius:999px;
+  padding:12px 28px;
+  color:#fff;
+  font-family:'Fredoka One',cursive;
+  font-size:clamp(1.1rem, 4.5vw, 1.5rem);
+  box-shadow:0 8px 32px rgba(5,150,105,.45);
+  z-index:10;
+  white-space:nowrap;
+}
+
+.mm-nodes{ position:absolute; inset:0; }
+
+.mm-node{
+  position:absolute;
+  transform:translate(-50%,-50%);
+  z-index:10;
+}
+
+.mm-input{
+  background:#fff;
+  border-radius:999px;
+  padding:9px 14px;
+  font-family:'Nunito',sans-serif;
+  font-size:.92rem;
+  font-weight:800;
+  color:#374151;
+  text-align:center;
+  outline:none;
+  width:clamp(120px, 16vw, 170px);
+  max-width:190px;
+  transition:transform .15s, box-shadow .2s;
+}
+.mm-input:focus{ transform:scale(1.05); }
+.mm-input.filled{ font-weight:900; }
+
+/* ✅ MOBILE: clean grid (NO overlap) */
+@media (max-width: 600px){
+  .mindmap-wrap{ min-height: 560px; }
+
+  /* hide rays on mobile */
+  #mmCanvas{ display:none; }
+
+  /* move center lower */
   .mm-center{
-    position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
-    background:linear-gradient(135deg,#34D399,#059669);
-    border-radius:999px;padding:12px 28px;
-    font-family:'Fredoka One',cursive;font-size:clamp(1.1rem,4.5vw,1.5rem);
-    color:#fff;letter-spacing:1px;box-shadow:0 8px 32px rgba(5,150,105,.45);
-    z-index:10;white-space:nowrap;animation:mmPulse 3s ease-in-out infinite
-  }
-  @keyframes mmPulse{0%,100%{box-shadow:0 8px 32px rgba(5,150,105,.45)}50%{box-shadow:0 8px 52px rgba(5,150,105,.7)}}
-
-  .mm-node{position:absolute;transform:translate(-50%,-50%);z-index:10}
-  .mm-input{
-    background:#fff;border-radius:999px;
-    padding:9px 14px;
-    font-family:'Nunito',sans-serif;
-    font-size:.92rem;font-weight:800;color:#374151;text-align:center;outline:none;
-    cursor:text;
-    width:clamp(108px, 16vw, 160px);
-    max-width:190px;
-    transition:box-shadow .2s,transform .15s;
-  }
-  @media(max-width:600px){
-    .mm-input{
-      width:clamp(128px, 40vw, 190px);
-      font-size:.9rem;
-      padding:9px 12px;
-      white-space:normal;
-      border-radius:16px;
-      line-height:1.2;
-    }
+    top: 86%;
+    width: 86%;
+    text-align:center;
   }
 
-@media (max-width: 600px) {
+  /* nodes become a grid */
+  .mm-nodes{
+    top: 12%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 92%;
+    height: auto;
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 10px;
+    position:absolute;
+  }
+
+  .mm-node{
+    position:static;
+    transform:none;
+  }
 
   .mm-input{
-    width: clamp(120px, 38vw, 165px) !important;
-    font-size: 0.9rem;
-    padding: 8px 10px;
-    border-radius: 14px;
-    line-height: 1.15;
-    white-space: normal;
+    width:100% !important;
+    border-radius:14px;
+    white-space:normal;
+    line-height:1.15;
+    padding:10px 10px;
+    font-size:.9rem;
   }
-
 }
-
-  
-  .mm-input:focus{transform:scale(1.05)}
-  .mm-input.filled{font-weight:900}
-
   /* ACTIVITY 2 */
   .pictures-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
   @media(max-width:820px){.pictures-grid{grid-template-columns:repeat(2,1fr)}}
@@ -297,24 +341,27 @@
       <div class="activity-title"><span>Activity 1:</span> Complete the Mind Map with Leisure-Related Words</div>
     </div>
 
-    <div class="mindmap-container">
-      <div class="mindmap-svg-wrap" id="mmWrap">
-        <svg id="mmCanvas" viewBox="0 0 800 480" preserveAspectRatio="xMidYMid meet"></svg>
-        <div class="mm-center" id="mmCenter">🌿 Leisure</div>
+<div class="mindmap-container">
+  <div class="mindmap-wrap" id="mmWrap">
+    <!-- SVG rays (desktop/tablet only) -->
+    <svg id="mmCanvas" viewBox="0 0 800 520" preserveAspectRatio="xMidYMid meet"></svg>
 
-        <!-- 8 nodes -->
-        <div class="mm-node" id="mmNode0"><input class="mm-input" data-mm="1" type="text" placeholder="free time" oninput="updateMindmap(this)"></div>
-        <div class="mm-node" id="mmNode1"><input class="mm-input" data-mm="2" type="text" placeholder="........" oninput="updateMindmap(this)"></div>
-        <div class="mm-node" id="mmNode2"><input class="mm-input" data-mm="3" type="text" placeholder="........" oninput="updateMindmap(this)"></div>
-        <div class="mm-node" id="mmNode3"><input class="mm-input" data-mm="4" type="text" placeholder="........" oninput="updateMindmap(this)"></div>
-        <div class="mm-node" id="mmNode4"><input class="mm-input" data-mm="5" type="text" placeholder="........" oninput="updateMindmap(this)"></div>
-        <div class="mm-node" id="mmNode5"><input class="mm-input" data-mm="6" type="text" placeholder="........" oninput="updateMindmap(this)"></div>
-        <div class="mm-node" id="mmNode6"><input class="mm-input" data-mm="7" type="text" placeholder="........" oninput="updateMindmap(this)"></div>
-        <div class="mm-node" id="mmNode7"><input class="mm-input" data-mm="8" type="text" placeholder="........" oninput="updateMindmap(this)"></div>
-      </div>
+    <!-- Center pill -->
+    <div class="mm-center" id="mmCenter">🌿 Leisure</div>
+
+    <!-- Nodes (desktop positioning + mobile grid) -->
+    <div class="mm-nodes" id="mmNodes">
+      <div class="mm-node" id="mmNode0"><input class="mm-input" data-mm="1" type="text" placeholder="free time" oninput="updateMindmap(this)"></div>
+      <div class="mm-node" id="mmNode1"><input class="mm-input" data-mm="2" type="text" placeholder="........" oninput="updateMindmap(this)"></div>
+      <div class="mm-node" id="mmNode2"><input class="mm-input" data-mm="3" type="text" placeholder="........" oninput="updateMindmap(this)"></div>
+      <div class="mm-node" id="mmNode3"><input class="mm-input" data-mm="4" type="text" placeholder="........" oninput="updateMindmap(this)"></div>
+      <div class="mm-node" id="mmNode4"><input class="mm-input" data-mm="5" type="text" placeholder="........" oninput="updateMindmap(this)"></div>
+      <div class="mm-node" id="mmNode5"><input class="mm-input" data-mm="6" type="text" placeholder="........" oninput="updateMindmap(this)"></div>
+      <div class="mm-node" id="mmNode6"><input class="mm-input" data-mm="7" type="text" placeholder="........" oninput="updateMindmap(this)"></div>
+      <div class="mm-node" id="mmNode7"><input class="mm-input" data-mm="8" type="text" placeholder="........" oninput="updateMindmap(this)"></div>
     </div>
   </div>
-
+</div>
   <!-- ACTIVITY 2 -->
   <div class="activity-card" id="card2">
     <div class="activity-header">
@@ -445,101 +492,106 @@
 const GOOGLE_SCRIPT_URL = "  https://script.google.com/macros/s/AKfycbwnJUIezi-MkZF6YqreYBvaaBZRV9gzUYjVFEqh5wDFI9pyQnV7AHNYbw-o-Z4l5DH7/exec";
 
 /* ── MIND MAP COLORS ── */
-const NODE_COLORS=[
-  {ray:'#6EE7B7',border:'#34D399'},{ray:'#93C5FD',border:'#60A5FA'},
-  {ray:'#FCA5A5',border:'#F87171'},{ray:'#FCD34D',border:'#FBBF24'},
-  {ray:'#C4B5FD',border:'#A78BFA'},{ray:'#FDB38B',border:'#FB923C'},
-  {ray:'#86EFAC',border:'#4ADE80'},{ray:'#F9A8D4',border:'#F472B6'}
+const NODE_COLORS = [
+  {ray:'#6EE7B7', border:'#34D399'},
+  {ray:'#93C5FD', border:'#60A5FA'},
+  {ray:'#FCA5A5', border:'#F87171'},
+  {ray:'#FCD34D', border:'#FBBF24'},
+  {ray:'#C4B5FD', border:'#A78BFA'},
+  {ray:'#FDB38B', border:'#FB923C'},
+  {ray:'#86EFAC', border:'#4ADE80'},
+  {ray:'#F9A8D4', border:'#F472B6'}
 ];
 
-// Layout presets (desktop vs mobile)
-function getMindMapLayout() {
-  const isMobile = window.matchMedia("(max-width: 600px)").matches;
+function isMobileMM(){
+  return window.matchMedia("(max-width: 600px)").matches;
+}
 
-  const cx = 400;
-  const cy = 240;
+function buildMindMap(){
+  const svg = document.getElementById("mmCanvas");
+  if(!svg) return;
 
-  if (!isMobile) {
-    // Desktop: clean circle
-    return {
-      cx, cy,
-      angles: [-135, -90, -45, 0, 45, 90, 135, 180],
-      dist:   [220, 220, 220, 210, 220, 220, 220, 210]
-    };
+  // Mobile: use grid, no rays
+  if(isMobileMM()){
+    svg.innerHTML = "";
+    for(let i=0;i<8;i++){
+      const node = document.getElementById("mmNode"+i);
+      if(!node) continue;
+      const input = node.querySelector(".mm-input");
+      input.style.border = "2.5px solid " + NODE_COLORS[i].border;
+      input.style.boxShadow = "0 4px 16px " + NODE_COLORS[i].ray + "99";
+    }
+    return;
   }
 
-  // 📱 MOBILE CLEAN LAYOUT (vertical sides)
- return {
-  cx: 400, cy: 240,
-  angles: [210, 235, 260, 285,  -30, -55, -80, -105],
-  dist:   [230, 215, 205, 215,  230, 215, 205, 215]
-};
-}
-function buildMindMap(){
-  const svg = document.getElementById('mmCanvas');
-  if(!svg) return;
-  svg.innerHTML='';
+  // Desktop: rays + circle layout
+  svg.style.display = "block";
+  svg.setAttribute("viewBox","0 0 800 520");
+  svg.innerHTML = "";
 
-  const {cx,cy,angles,dist} = getMindMapLayout();
+  const cx=400, cy=260;
+  const angles=[-135,-95,-55,-15,15,55,95,135];
+  const dist  =[240,235,230,225,225,230,235,240];
 
-  // defs for gradient rays
-  const defs=document.createElementNS('http://www.w3.org/2000/svg','defs');
+  const defs = document.createElementNS("http://www.w3.org/2000/svg","defs");
   angles.forEach((a,i)=>{
-    const g=document.createElementNS('http://www.w3.org/2000/svg','linearGradient');
-    g.setAttribute('id','rg'+i);
-    g.setAttribute('gradientUnits','userSpaceOnUse');
+    const g = document.createElementNS("http://www.w3.org/2000/svg","linearGradient");
+    g.setAttribute("id","rg"+i);
+    g.setAttribute("gradientUnits","userSpaceOnUse");
 
     const rad=a*Math.PI/180;
     const nx=cx+dist[i]*Math.cos(rad), ny=cy+dist[i]*Math.sin(rad);
 
-    g.setAttribute('x1',cx); g.setAttribute('y1',cy);
-    g.setAttribute('x2',nx); g.setAttribute('y2',ny);
+    g.setAttribute("x1",cx); g.setAttribute("y1",cy);
+    g.setAttribute("x2",nx); g.setAttribute("y2",ny);
 
-    const s1=document.createElementNS('http://www.w3.org/2000/svg','stop');
-    s1.setAttribute('offset','0%');
-    s1.setAttribute('stop-color',NODE_COLORS[i].ray);
-    s1.setAttribute('stop-opacity','1');
+    const s1=document.createElementNS("http://www.w3.org/2000/svg","stop");
+    s1.setAttribute("offset","0%");
+    s1.setAttribute("stop-color",NODE_COLORS[i].ray);
+    s1.setAttribute("stop-opacity","1");
 
-    const s2=document.createElementNS('http://www.w3.org/2000/svg','stop');
-    s2.setAttribute('offset','100%');
-    s2.setAttribute('stop-color',NODE_COLORS[i].ray);
-    s2.setAttribute('stop-opacity','0.28');
+    const s2=document.createElementNS("http://www.w3.org/2000/svg","stop");
+    s2.setAttribute("offset","100%");
+    s2.setAttribute("stop-color",NODE_COLORS[i].ray);
+    s2.setAttribute("stop-opacity","0.25");
 
     g.appendChild(s1); g.appendChild(s2); defs.appendChild(g);
   });
   svg.appendChild(defs);
 
-  // draw rays
   angles.forEach((a,i)=>{
     const rad=a*Math.PI/180;
     const nx=cx+dist[i]*Math.cos(rad), ny=cy+dist[i]*Math.sin(rad);
 
-    const ln=document.createElementNS('http://www.w3.org/2000/svg','line');
-    ln.setAttribute('x1',cx); ln.setAttribute('y1',cy);
-    ln.setAttribute('x2',nx); ln.setAttribute('y2',ny);
-    ln.setAttribute('stroke','url(#rg'+i+')');
-    ln.setAttribute('stroke-width','26');
-    ln.setAttribute('stroke-linecap','round');
-    ln.setAttribute('opacity','0.95');
+    const ln=document.createElementNS("http://www.w3.org/2000/svg","line");
+    ln.setAttribute("x1",cx); ln.setAttribute("y1",cy);
+    ln.setAttribute("x2",nx); ln.setAttribute("y2",ny);
+    ln.setAttribute("stroke","url(#rg"+i+")");
+    ln.setAttribute("stroke-width","26");
+    ln.setAttribute("stroke-linecap","round");
+    ln.setAttribute("opacity","0.95");
     svg.appendChild(ln);
   });
 
-  // position nodes
   angles.forEach((a,i)=>{
     const rad=a*Math.PI/180;
     const nx=cx+dist[i]*Math.cos(rad), ny=cy+dist[i]*Math.sin(rad);
-    const px=(nx/800)*100, py=(ny/480)*100;
 
-    const node=document.getElementById('mmNode'+i);
-    const input=node.querySelector('.mm-input');
-    node.style.left=px+'%';
-    node.style.top=py+'%';
+    const px=(nx/800)*100, py=(ny/520)*100;
+    const node=document.getElementById("mmNode"+i);
+    const input=node.querySelector(".mm-input");
 
-    input.style.border='2.5px solid '+NODE_COLORS[i].border;
-    input.style.boxShadow='0 4px 16px '+NODE_COLORS[i].ray+'99';
+    node.style.left=px+"%";
+    node.style.top=py+"%";
+
+    input.style.border="2.5px solid "+NODE_COLORS[i].border;
+    input.style.boxShadow="0 4px 16px "+NODE_COLORS[i].ray+"99";
   });
 }
 
+window.addEventListener("load", buildMindMap);
+window.addEventListener("resize", buildMindMap);
+window.addEventListener("orientationchange", buildMindMap);
 /* ── PROGRESS ── */
 const TOTAL=3+8+6+5+2; // student fields + mindmap + pictures + audio + dialogue
 const filled=new Set();
@@ -727,6 +779,7 @@ window.addEventListener('load',()=>{
 </body>
 
 </html>
+
 
 
 
