@@ -452,19 +452,12 @@ function getMindMapLayout() {
   }
 
   // 📱 MOBILE CLEAN LAYOUT (vertical sides)
-  return {
-    cx, cy,
-    angles: [
-      200, 220, 240, 260,   // left side
-      -20, -40, -60, -80    // right side
-    ],
-    dist: [
-      190, 180, 170, 180,
-      190, 180, 170, 180
-    ]
-  };
+ return {
+  cx: 400, cy: 240,
+  angles: [210, 235, 260, 285,  -30, -55, -80, -105],
+  dist:   [230, 215, 205, 215,  230, 215, 205, 215]
+};
 }
-
 function buildMindMap(){
   const svg = document.getElementById('mmCanvas');
   if(!svg) return;
@@ -717,5 +710,6 @@ window.addEventListener('load',()=>{
 </body>
 
 </html>
+
 
 
