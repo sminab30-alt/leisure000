@@ -614,28 +614,13 @@ function updateMindmap(input){
   updateProgress();
 }
 function checkPicture(input){
-  const item=input.closest('.picture-item');
-  const answer=item.dataset.answer.toLowerCase().trim();
-  const val=input.value.toLowerCase().trim();
-  const idx=[...document.querySelectorAll('.picture-input')].indexOf(input)+1;
-  const fb=document.getElementById('fb'+idx);
+  const val = input.value.trim();
+  const idx = [...document.querySelectorAll('.picture-input')].indexOf(input) + 1;
 
   if(val){
     filled.add('pic'+idx);
-    if(val===answer){
-      input.classList.add('correct');input.classList.remove('wrong');
-      if(fb)fb.textContent='✅ Correct!';
-    }else if(val.length>=answer.length){
-      input.classList.add('wrong');input.classList.remove('correct');
-      if(fb)fb.textContent='❌ Try again';
-    }else{
-      input.classList.remove('correct','wrong');
-      if(fb)fb.textContent='';
-    }
-  }else{
+  } else {
     filled.delete('pic'+idx);
-    input.classList.remove('correct','wrong');
-    if(fb)fb.textContent='';
   }
   updateProgress();
 }
@@ -779,6 +764,7 @@ window.addEventListener('load',()=>{
 </body>
 
 </html>
+
 
 
 
